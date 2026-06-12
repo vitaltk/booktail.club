@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вхід через Google - Книжковий Клуб</title>
+    
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <script src="https://unpkg.com/jwt-decode@4.0.0/build/cjs/index.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        #result-window {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #1e1e1e;
+            color: #00ff00;
+            border-radius: 5px;
+            text-align: left;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none; /* Спочатку приховане */
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Вхід до Книжкового Клубу</h2>
+
+    <div id="g_id_onload"
+     data-client_id="508104003854-j693cvoas2q96mp059aif66o07g3q1rj.apps.googleusercontent.com"
+     data-context="signin"
+     data-ux_mode="popup"
+     data-callback="authCallback"
+     data-auto_select="true"
+     data-itp_support="true">
+</div>
+
+<div class="g_id_signin"
+     data-type="standard"
+     data-shape="pill"
+     data-theme="outline"
+     data-text="signin_with"
+     data-size="large"
+     data-logo_alignment="left">
+</div>
+
+    <div id="result-window">Тут з'являться дані після авторизації...</div>
+</div>
+
+<script>
+    // Метод для колбеку, який ви просили створити
+    function authCallback(response) {
+        const resultWindow = document.getElementById('result-window');
+        resultWindow.style.display = 'block'; // Показуємо вікно
+
+        try {
+            // Google повертає закодований JWT-токен у полі credential
+            const credentialToken = response.credential;
+            
+            // Розшифровуємо токен, щоб дістати публічні дані користувача
+            const decodedData = jwt_decode.jwtDecode(credentialToken);
+            
+            // Виводимо красивий JSON результат у наше вікно
+            resultWindow.textContent = JSON.stringify({
+                "Повідомлення": "Авторизація успішна!",
+                "Отриманий_Токен": credentialToken.substring(0, 30) + "...", // скорочено для вигляду
+                "Дані_Користувача": decodedData
+            }, null, 2);
+            
+            console.log("Повні дані від Google:", decodedData);
+        } catch (error) {
+            resultWindow.textContent = "Помилка обробки даних: " + error.message;
+            resultWindow.style.color = '#ff0000';
+        }
+    }
+</script>
+
+</body>
+</html>
