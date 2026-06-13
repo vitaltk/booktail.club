@@ -7,7 +7,7 @@
     
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
-    <script src="https://unpkg.com/jwt-decode@4.0.0/build/cjs/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jwt-decode/4.0.0/jwt-decode.umd.min.js"></script>
 
     <style>
         body {
@@ -87,7 +87,7 @@
             const credentialToken = response.credential;
             
             // Розшифровуємо токен, щоб дістати публічні дані користувача
-            const decodedData = jwt_decode.jwtDecode(credentialToken);
+            const decodedData = jwtDecode(credentialToken);
             
             // Виводимо красивий JSON результат у наше вікно
             resultWindow.textContent = JSON.stringify({
